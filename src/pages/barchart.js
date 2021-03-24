@@ -4,8 +4,9 @@ import Chart from '../components/chart';
 import './styles/barchart.css';
 
 const BarChart = () => {
-    const months = ['mar', 'feb', 'mar', 'apr', 'may', 'june', 'july', 'august', 'sep', 'oct', 'nov', 'dec']
-    const yvalues = [5, 6, 2, 7, 9, 1, 2, 3, 8, 3, 6, 7]
+    const months = ['Mar 1, 2017', 'May 1, 2017', 'Jul 1, 2017', 'Sep 1, 2017', 'Nov 1, 2017', 'Jan 1, 2018', 'Mar 1, 2018', 'May 1, 2018', 'Jul 1, 2018', 'Sep 1, 2018', 'Nov 1, 2018', 'Jan 1, 2019']
+    const y1values = [40, 50, 37, 70, 65, 35, 30, 39, 45, 37, 55, 67]
+    const y2values = [1950, 2200, 2000, 2600, 2500, 2050, 1800, 1900, 2200, 2050, 2300, 2500]
 
     return (
         <div className='barchart'>
@@ -21,8 +22,8 @@ const BarChart = () => {
                         bottom: 80
                     }} 
                     xdata={months}
-                    ydata={yvalues}
-
+                    ydata={y1values}
+                    ydatascale={y2values}
                 />
             </div>
         </div>
