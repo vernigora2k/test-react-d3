@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
 
-const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale}) => {
+const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatatemp}) => {
 
     const canvas = useRef(null)
 
@@ -10,10 +10,12 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale}) => {
         const svg = d3.select(canvas.current)
 
         addAxes(svg)
-    }, [xdim, ydim, margin, xdata, ydata, ydatascale])
+        // addBars(svg)
+        addText(svg)
+
+    }, [xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatatemp])
 
     const addAxes = (svg) => {
-
         //xscale
         const xAxis = d3.axisBottom(xscale)
 
@@ -32,7 +34,6 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale}) => {
         const yaditscale = d3.scaleLinear()
             .domain([1800, d3.max(ydatascale)])
             .range([ydim, 20])
-
         const yaditAxis = d3.axisRight(yaditscale)
 
         svg.append('g')
@@ -41,9 +42,61 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale}) => {
                
     }
 
+    const addBars = (svg) => {
+        const linearScale = d3.scaleLinear()
+            .domain([0, d3.max(ydata)])
+            .range([0, ydim])
+
+        const scaledYData = ydata.map(yval => {
+            return linearScale(yval)
+        })
+
+        svg.selectAll('rect')
+            .data(scaledYData)
+            .enter()
+            .append('rect')
+            .attr('width', xscale.bandwidth())
+            .attr('height', d => {
+                return d
+            })
+            .attr('x', (d, i) => {
+                return xscale(xdata[i])
+            })
+            .attr('y', d => {
+                return ydim - d
+            })
+            .attr('fill', 'gray')
+    }
+
+    const addText = (svg) => {
+        svg.append('text')
+            .text('Synaptics')
+            .attr('x', -200)
+            .attr('y', 40)
+            .attr('transform', `rotate(-90, ${margin.left/2}, ${margin.top/2})`)
+            .attr('fill', 'blue')
+        
+            svg.append('text')
+            .text('Japan Equities')
+            .attr('x', 200)
+            .attr('y', -xdim - 80)
+            .attr('transform', `rotate(90, ${margin.left/2}, ${margin.top/2})`)
+            .attr('fill', 'green')     
+    }
+
+    // const xscale = d3.scaleBand()
+    //     .domain(xdata)
+    //     .range([margin.left, xdim + margin.left])
+    //     .padding(0.05)
+
+    // const yscale = d3.scaleLinear()
+    //     .domain([30, d3.max(ydata)])
+    //     .range([ydim, 20])
+
     const xscale = d3.scaleBand()
         .domain(xdata)
         .range([margin.left, xdim + margin.left])
+        .padding(0.05)
 
     const yscale = d3.scaleLinear()
         .domain([30, d3.max(ydata)])

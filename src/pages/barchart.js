@@ -8,6 +8,10 @@ const BarChart = () => {
     const y1values = [40, 50, 37, 70, 65, 35, 30, 39, 45, 37, 55, 67]
     const y2values = [1950, 2200, 2000, 2600, 2500, 2050, 1800, 1900, 2200, 2050, 2300, 2500]
 
+    
+    const xdatatemp = [400, 500, 370, 700, 650, 350, 300, 390, 450, 370, 550, 670]
+    const ydatatemp = [40, 50, 37, 70, 65, 35, 30, 39, 45, 37, 55, 67]
+
     return (
         <div className='barchart'>
             <Header />
@@ -24,6 +28,9 @@ const BarChart = () => {
                     xdata={months}
                     ydata={y1values}
                     ydatascale={y2values}
+
+                    xdatatemp={xdatatemp}
+                    ydatatemp={ydatatemp}
                 />
             </div>
         </div>

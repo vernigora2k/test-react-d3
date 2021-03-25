@@ -1,5 +1,7 @@
 .canvas {
   width: 1440px;
   height: 500px;
-  margin: auto;  
+  margin: auto; 
+  font-size: 1.5em; 
+  font-weight: bold;
 }
