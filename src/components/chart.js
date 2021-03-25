@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
 
-const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatatemp}) => {
+const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xdatatemp, ydatatemp}) => {
 
     const canvas = useRef(null)
 
@@ -12,8 +12,9 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
 
         addAxes(svg)
         // addBars(svg)
+        addLineChart(svg)
         addText(svg)
-        addGridLines(svg)
+        addGridLines()
 
     }, [xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatatemp])
 
@@ -71,6 +72,49 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
             .attr('fill', 'gray')
     }
 
+    const addLineChart = (svg) => {
+        // const scaleX = d3.scaleBand()
+        //                .domain(xdata)
+        //                .range([margin.left, xdim + margin.left])
+        // const scaleY = d3.scaleLinear()
+        //                .domain([30, d3.max(ydata)])
+        //                .range([ydim, 20])
+
+        // // console.log(xscale)
+        // for(let i = 0; i < rawData; i++) 
+        //     data.push({x: scaleX(rawData[i].x) + margin,
+        //                y: scaleY(rawData[i].y) + margin
+        //     })
+        // console.log(data)
+        
+        // let line = d3.line()
+        //     .x(d => d.x)
+        //     .y(d => d.y)
+
+        // svg.append('g')
+        //    .append('path')
+        //    .attr('d', line(data))
+        //    .style('stroke', 'steelblue')
+        //    .style('stroke-width', 2)
+
+        d3.csv('data.csv').then(function(data) {
+            data.forEach(function(d) {
+                d.date = d3.timeParse(d.data)
+                d.close = +d.close
+            })
+        })
+
+        const chartLine = d3.line()
+            .x(value => {return (value.x + margin.top) + 30})
+            .y(value => {return (value.y - 100) * 4})
+
+        svg.select('path')
+           .data([rawData])
+           .join('path')
+           .attr('d', value => chartLine(value))
+
+    }
+
     const addText = (svg) => {
         svg.append('text')
             .text('Synaptics')
@@ -87,7 +131,7 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
             .attr('fill', 'green')     
     }
 
-    const addGridLines = (svg) => {
+    const addGridLines = () => {
         d3.selectAll("g.x-axis g.tick")
             .append("line") 
             .classed("grid-line", true) 
@@ -105,12 +149,12 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
             .attr("y2", 0);
     }
 
-    const xscale = d3.scaleBand()
+    var xscale = d3.scaleBand()
         .domain(xdata)
         .range([margin.left, xdim + margin.left])
         .padding(0.05)
 
-    const yscale = d3.scaleLinear()
+    var yscale = d3.scaleLinear()
         .domain([30, d3.max(ydata)])
         .range([ydim, 20])
 
