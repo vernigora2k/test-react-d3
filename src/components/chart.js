@@ -8,10 +8,12 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
+            .attr("class", "axis")
 
         addAxes(svg)
         // addBars(svg)
         addText(svg)
+        addGridLines(svg)
 
     }, [xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatatemp])
 
@@ -22,6 +24,7 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
         svg.append('g')
             .call(xAxis)
             .attr('transform', `translate(0, ${ydim})`)
+            .attr("class", "x-axis")
 
         //yscale
         const yAxis = d3.axisLeft(yscale)
@@ -29,6 +32,7 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
         svg.append('g')
             .call(yAxis)
             .attr('transform', `translate(${margin.left})`)
+            .attr("class", "y-axis")
         
         //yscale additional(right)
         const yaditscale = d3.scaleLinear()
@@ -38,8 +42,7 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
 
         svg.append('g')
             .call(yaditAxis)
-            .attr('transform', `translate(${margin.left + xdim})`)
-               
+            .attr('transform', `translate(${margin.left + xdim})`)        
     }
 
     const addBars = (svg) => {
@@ -84,14 +87,23 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatate
             .attr('fill', 'green')     
     }
 
-    // const xscale = d3.scaleBand()
-    //     .domain(xdata)
-    //     .range([margin.left, xdim + margin.left])
-    //     .padding(0.05)
+    const addGridLines = (svg) => {
+        d3.selectAll("g.x-axis g.tick")
+            .append("line") 
+            .classed("grid-line", true) 
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", - (ydim-20));
 
-    // const yscale = d3.scaleLinear()
-    //     .domain([30, d3.max(ydata)])
-    //     .range([ydim, 20])
+        d3.selectAll("g.y-axis g.tick")
+            .append("line")
+            .classed("grid-line", true)
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", xdim)
+            .attr("y2", 0);
+    }
 
     const xscale = d3.scaleBand()
         .domain(xdata)
