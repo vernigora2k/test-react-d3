@@ -17,11 +17,11 @@ const Header = () => {
                 <h3>periods of:</h3>
                 <div className="header__equities">
                     <input type="checkbox" id="equities" name="scales" />
-                    <label for="equities">Synaptics leads Japan Equities</label>
+                    <label htmlFor="equities">Synaptics leads Japan Equities</label>
                 </div>
                 <div className="header__synaptics">
                     <input type="checkbox" id="synaptics" name="scales" />
-                    <label for="synaptics">Japan Equities leads Synaptics</label>
+                    <label htmlFor="synaptics">Japan Equities leads Synaptics</label>
                 </div>
             </div>
         </div>

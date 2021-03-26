@@ -48,7 +48,6 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
 
     const addLineChartBlue = (svg) => {
         d3.csv(csvData).then(function(data) {
-            console.log(xdim)
             data.forEach(function(d, i) {
                 if (i > xdim - 961) return 
                 d.date = i
