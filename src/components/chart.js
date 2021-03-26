@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
 import csvData from './aapl.csv';
@@ -7,6 +7,8 @@ import { scaleBand } from 'd3';
 const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
 
     const canvas = useRef(null)
+    const [isEquitiesChecked, setEquitiesChecked] = useState(false)
+    const handleEquitiesClick = () => setEquitiesChecked(!isEquitiesChecked)
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
