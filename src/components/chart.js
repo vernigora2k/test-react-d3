@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
+import csvData from './aapl.csv';
 
 const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xdatatemp, ydatatemp}) => {
 
@@ -11,8 +12,7 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xda
             .attr("class", "axis")
 
         addAxes(svg)
-        // addBars(svg)
-        addLineChart(svg)
+        addLineChartBlue(svg)
         addText(svg)
         addGridLines()
 
@@ -46,73 +46,26 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xda
             .attr('transform', `translate(${margin.left + xdim})`)        
     }
 
-    const addBars = (svg) => {
-        const linearScale = d3.scaleLinear()
-            .domain([0, d3.max(ydata)])
-            .range([0, ydim])
-
-        const scaledYData = ydata.map(yval => {
-            return linearScale(yval)
+    const addLineChartBlue = (svg) => {
+        d3.csv(csvData).then(function(data) {
+            console.log(xdim)
+            data.forEach(function(d, i) {
+                if (i > xdim - 961) return 
+                d.date = i
+                d.close = +d.close * 20 - 3900
+            })
+            
+            const chartLine = d3.line()
+            .x(value => {return (value.date) * 3 + margin.left})
+            .y(value => {return (value.close - 100) /6})
+            
+            svg.select('path')
+            .data([data])
+            .join('path')
+            .attr('d', value => chartLine(value))
+            .style('stroke', 'steelblue')
+            .style('stroke-width', 4)
         })
-
-        svg.selectAll('rect')
-            .data(scaledYData)
-            .enter()
-            .append('rect')
-            .attr('width', xscale.bandwidth())
-            .attr('height', d => {
-                return d
-            })
-            .attr('x', (d, i) => {
-                return xscale(xdata[i])
-            })
-            .attr('y', d => {
-                return ydim - d
-            })
-            .attr('fill', 'gray')
-    }
-
-    const addLineChart = (svg) => {
-        // const scaleX = d3.scaleBand()
-        //                .domain(xdata)
-        //                .range([margin.left, xdim + margin.left])
-        // const scaleY = d3.scaleLinear()
-        //                .domain([30, d3.max(ydata)])
-        //                .range([ydim, 20])
-
-        // // console.log(xscale)
-        // for(let i = 0; i < rawData; i++) 
-        //     data.push({x: scaleX(rawData[i].x) + margin,
-        //                y: scaleY(rawData[i].y) + margin
-        //     })
-        // console.log(data)
-        
-        // let line = d3.line()
-        //     .x(d => d.x)
-        //     .y(d => d.y)
-
-        // svg.append('g')
-        //    .append('path')
-        //    .attr('d', line(data))
-        //    .style('stroke', 'steelblue')
-        //    .style('stroke-width', 2)
-
-        d3.csv('data.csv').then(function(data) {
-            data.forEach(function(d) {
-                d.date = d3.timeParse(d.data)
-                d.close = +d.close
-            })
-        })
-
-        const chartLine = d3.line()
-            .x(value => {return (value.x + margin.top) + 30})
-            .y(value => {return (value.y - 100) * 4})
-
-        svg.select('path')
-           .data([rawData])
-           .join('path')
-           .attr('d', value => chartLine(value))
-
     }
 
     const addText = (svg) => {
@@ -168,7 +121,6 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xda
                 style={{backgroundColor: 'beige'}}
                 ref={canvas}
             >
-
             </svg>
         </div>
     )
