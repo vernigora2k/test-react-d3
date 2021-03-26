@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
 import csvData from './aapl.csv';
+import { scaleBand } from 'd3';
 
 const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
 
@@ -11,6 +12,7 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
         const svg = d3.select(canvas.current)
             .attr("class", "axis")
 
+        addPeriodBlocks(svg)
         addAxes(svg)
         addLineChartBlue(svg)
         addText(svg)
@@ -99,6 +101,20 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             .attr("y1", 0)
             .attr("x2", xdim)
             .attr("y2", 0);
+    }
+
+    const addPeriodBlocks = (svg) => {
+        svg.selectAll('rect')
+          .data(ydata)  
+          .enter()
+          .append('rect')
+          .attr('width', xscale.bandwidth())
+          .attr('height', ydim - 20)
+          .attr('fill', 'lightcoral')
+          .attr('opacity', 0.1)
+          .attr('x', 50)
+          .attr('y', 20)
+          
     }
 
     var xscale = d3.scaleBand()
