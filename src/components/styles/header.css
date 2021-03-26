@@ -1,0 +1,70 @@
+.header {
+    width: 1440px;
+    height: 2.5em;
+    background-color: lightblue;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__leftarea {
+    display: flex;
+    align-items: center;
+    padding-left: 1em;
+}
+
+h3 {
+    text-transform: uppercase;
+}
+
+.header__rightarea {
+    display: flex;
+    align-items: center;
+    padding-right: 2em;
+}
+
+select {
+    padding: 5px;
+    margin-left: 1em;
+    width: 15em;
+}
+
+input[type=checkbox] {
+    margin-left: 1em;
+}
+
+label {
+    padding-left: 1.5em;
+}
+
+#equities, #synaptics {
+    width: 1em;
+    height: 1em;
+    position: relative;
+}
+
+#equities::before {
+    position: absolute;
+    content: '';
+    width: 1em;
+    height: 1em;
+    background-color: lightgreen;
+    left: 1.3em;
+    bottom: -2px;
+    box-shadow: 1px;
+    border: 1px solid green;
+}
+
+#synaptics::before {
+    position: absolute;
+    content: '';
+    width: 1em;
+    height: 1em;
+    background-color: lightcoral;
+    left: 1.3em;
+    bottom: -2px;
+    box-shadow: 1px;
+    border: 1px solid red;
+}   
+

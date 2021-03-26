@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import './styles/chart.css';
 import csvData from './aapl.csv';
 
-const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xdatatemp, ydatatemp}) => {
+const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
 
     const canvas = useRef(null)
 
@@ -16,7 +16,7 @@ const Chart = ({xdim, ydim, margin, xdata, ydata, ydatascale, rawData, data, xda
         addText(svg)
         addGridLines()
 
-    }, [xdim, ydim, margin, xdata, ydata, ydatascale, xdatatemp, ydatatemp])
+    }, [xdim, ydim, margin, xdata, ydata, ydatascale])
 
     const addAxes = (svg) => {
         //xscale
