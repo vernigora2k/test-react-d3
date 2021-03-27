@@ -122,6 +122,8 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
             .attr('id', 'periodsRed')
             .attr('fill', 'lightcoral')
             .attr('opacity', 0.3)
+            .style("stroke", 'black') 
+            .style("stroke-dasharray", "4,4")
         })
     }
 
@@ -140,6 +142,8 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
               .attr('id', 'periodsGreen')
               .attr('fill', 'lightgreen')
               .attr('opacity', 0.3)
+              .style("stroke", 'black') 
+              .style("stroke-dasharray", "4,4")
         })
     }
 
