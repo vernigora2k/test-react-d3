@@ -112,6 +112,7 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             d3.selectAll('#periodsRed').remove()
             return
         }
+        console.log('periods red')
         svg.selectAll('rect')
           .data(ydata)  
           .enter()
@@ -130,17 +131,16 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             d3.selectAll('#periodsGreen').remove()
             return
         }
-        svg.selectAll('rect')
-          .data(ydata)  
-          .enter()
-          .append('rect')
-          .attr('id', 'periodsGreen')
+        console.log('periods green')
+
+        svg.append('rect')
+          .attr('x', 500)
+          .attr('y', 20)   
           .attr('width', xscale.bandwidth())
           .attr('height', ydim - 20)
+          .attr('id', 'periodsGreen')
           .attr('fill', 'lightgreen')
-          .attr('opacity', 0.05)
-          .attr('x', 500)
-          .attr('y', 20)     
+          .attr('opacity', 0.3)
     }
 
     var xscale = d3.scaleBand()
