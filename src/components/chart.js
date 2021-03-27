@@ -5,8 +5,8 @@ import csvData from './aapl.csv';
 import { scaleBand } from 'd3';
 import { Context } from '../App';
 
-const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
-    const {isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick} = useContext(Context)
+const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, redPeriods }) => {
+    const {isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick } = useContext(Context)
 
     const canvas = useRef(null)
 
@@ -112,18 +112,17 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             d3.selectAll('#periodsRed').remove()
             return
         }
-        console.log('periods red')
-        svg.selectAll('rect')
-          .data(ydata)  
-          .enter()
-          .append('rect')
-          .attr('id', 'periodsRed')
-          .attr('width', xscale.bandwidth())
-          .attr('height', ydim - 20)
-          .attr('fill', 'lightcoral')
-          .attr('opacity', 0.05)
-          .attr('x', 50)
-          .attr('y', 20)     
+       
+        redPeriods.forEach(d => {
+            svg.append('rect')
+            .attr('x', d.x)
+            .attr('y', 20)   
+            .attr('width', d.w)
+            .attr('height', ydim - 20)
+            .attr('id', 'periodsRed')
+            .attr('fill', 'lightcoral')
+            .attr('opacity', 0.3)
+        })
     }
 
     const addPeriodBlocksGreen = (svg) => {
@@ -131,16 +130,17 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             d3.selectAll('#periodsGreen').remove()
             return
         }
-        console.log('periods green')
 
-        svg.append('rect')
-          .attr('x', 500)
-          .attr('y', 20)   
-          .attr('width', xscale.bandwidth())
-          .attr('height', ydim - 20)
-          .attr('id', 'periodsGreen')
-          .attr('fill', 'lightgreen')
-          .attr('opacity', 0.3)
+        greenPeriods.forEach(d => {
+            svg.append('rect')
+              .attr('x', d.x)
+              .attr('y', 20)   
+              .attr('width', d.w)
+              .attr('height', ydim - 20)
+              .attr('id', 'periodsGreen')
+              .attr('fill', 'lightgreen')
+              .attr('opacity', 0.3)
+        })
     }
 
     var xscale = d3.scaleBand()
