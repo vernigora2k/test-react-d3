@@ -49,11 +49,11 @@ label {
     content: '';
     width: 1em;
     height: 1em;
-    background-color: lightgreen;
+    background-color: lightcoral;
     left: 1.3em;
     bottom: -2px;
     box-shadow: 1px;
-    border: 1px solid green;
+    border: 1px solid red;
 }
 
 #synaptics::before {
@@ -61,10 +61,10 @@ label {
     content: '';
     width: 1em;
     height: 1em;
-    background-color: lightcoral;
+    background-color: lightgreen;
     left: 1.3em;
     bottom: -2px;
     box-shadow: 1px;
-    border: 1px solid red;
+    border: 1px solid green;
 }   
 

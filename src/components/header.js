@@ -3,9 +3,7 @@ import { Context } from '../App';
 import './styles/header.css';
 
 const Header = () => {
-    const {isEquitiesChecked, handleEquitiesClick} = useContext(Context)
-    console.log(isEquitiesChecked)
-    console.log(handleEquitiesClick)
+    const {isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick} = useContext(Context)
 
     return (
         <div className='header'>
@@ -24,7 +22,7 @@ const Header = () => {
                     <label htmlFor="equities">Synaptics leads Japan Equities</label>
                 </div>
                 <div className="header__synaptics">
-                    <input type="checkbox" id="synaptics" name="scales" />
+                    <input onClick={handleSynapticsClick} type="checkbox" id="synaptics" name="scales" />
                     <label htmlFor="synaptics">Japan Equities leads Synaptics</label>
                 </div>
             </div>

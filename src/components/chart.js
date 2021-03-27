@@ -6,16 +6,16 @@ import { scaleBand } from 'd3';
 import { Context } from '../App';
 
 const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
-    const {isEquitiesChecked, handleEquitiesClick} = useContext(Context)
+    const {isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick} = useContext(Context)
 
     const canvas = useRef(null)
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
-            .attr("class", "axis")
+        .attr("class", "axis")
 
-        // if(value) console.log('context true')
-        addPeriodBlocks(svg)
+        addPeriodBlocksRed(svg)
+        addPeriodBlocksGreen(svg)
         addAxes(svg)
         addLineChartBlue(svg)
         addText(svg)
@@ -58,7 +58,7 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
                 d.date = i
                 d.close = +d.close * 20 - 3900
             })
-            
+
             const chartLine = d3.line()
             .x(value => {return (value.date) * 3 + margin.left})
             .y(value => {return (value.close - 100) /6})
@@ -66,6 +66,7 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             svg.select('path')
             .data([data])
             .join('path')
+            .attr('id', 'lineBlue')
             .attr('d', value => chartLine(value))
             .style('stroke', 'steelblue')
             .style('stroke-width', 4)
@@ -106,20 +107,40 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
             .attr("y2", 0);
     }
 
-    const addPeriodBlocks = (svg) => {
-        if (!isEquitiesChecked) return
-
+    const addPeriodBlocksRed = (svg) => {
+        if (!isEquitiesChecked) {
+            d3.selectAll('#periodsRed').remove()
+            return
+        }
         svg.selectAll('rect')
           .data(ydata)  
           .enter()
           .append('rect')
+          .attr('id', 'periodsRed')
           .attr('width', xscale.bandwidth())
           .attr('height', ydim - 20)
           .attr('fill', 'lightcoral')
-          .attr('opacity', 0.1)
+          .attr('opacity', 0.05)
           .attr('x', 50)
-          .attr('y', 20)
-          
+          .attr('y', 20)     
+    }
+
+    const addPeriodBlocksGreen = (svg) => {
+        if (!isSynapticsChecked) {
+            d3.selectAll('#periodsGreen').remove()
+            return
+        }
+        svg.selectAll('rect')
+          .data(ydata)  
+          .enter()
+          .append('rect')
+          .attr('id', 'periodsGreen')
+          .attr('width', xscale.bandwidth())
+          .attr('height', ydim - 20)
+          .attr('fill', 'lightgreen')
+          .attr('opacity', 0.05)
+          .attr('x', 500)
+          .attr('y', 20)     
     }
 
     var xscale = d3.scaleBand()

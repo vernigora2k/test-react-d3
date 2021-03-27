@@ -7,10 +7,12 @@ export const Context = React.createContext()
 function App() {
 
   const [isEquitiesChecked, setEquitiesChecked] = useState(false)
+  const [isSynapticsChecked, setSynapticsChecked] = useState(false)
   const handleEquitiesClick = () => setEquitiesChecked(!isEquitiesChecked)
+  const handleSynapticsClick = () => setSynapticsChecked(!isSynapticsChecked)
 
   return (
-    <Context.Provider value={{isEquitiesChecked, handleEquitiesClick}} >
+    <Context.Provider value={{isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick}} >
       <div className="App">
         <BarChart />
       </div>
