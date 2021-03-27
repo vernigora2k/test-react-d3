@@ -1,19 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
 import csvData from './aapl.csv';
 import { scaleBand } from 'd3';
+import { Context } from '../App';
 
 const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
+    const {isEquitiesChecked, handleEquitiesClick} = useContext(Context)
 
     const canvas = useRef(null)
-    const [isEquitiesChecked, setEquitiesChecked] = useState(false)
-    const handleEquitiesClick = () => setEquitiesChecked(!isEquitiesChecked)
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
             .attr("class", "axis")
 
+        // if(value) console.log('context true')
         addPeriodBlocks(svg)
         addAxes(svg)
         addLineChartBlue(svg)
@@ -106,6 +107,8 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
     }
 
     const addPeriodBlocks = (svg) => {
+        if (!isEquitiesChecked) return
+
         svg.selectAll('rect')
           .data(ydata)  
           .enter()

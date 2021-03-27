@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Context } from '../App';
 import './styles/header.css';
 
 const Header = () => {
+    const {isEquitiesChecked, handleEquitiesClick} = useContext(Context)
+    console.log(isEquitiesChecked)
+    console.log(handleEquitiesClick)
 
     return (
         <div className='header'>
@@ -16,7 +20,7 @@ const Header = () => {
             <div className="header__rightarea">
                 <h3>periods of:</h3>
                 <div className="header__equities">
-                    <input type="checkbox" id="equities" name="scales" />
+                    <input onClick={handleEquitiesClick} type="checkbox" id="equities" name="scales" />
                     <label htmlFor="equities">Synaptics leads Japan Equities</label>
                 </div>
                 <div className="header__synaptics">
