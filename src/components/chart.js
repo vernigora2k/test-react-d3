@@ -2,13 +2,29 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
 import csvData from './aapl.csv';
-import { scaleBand } from 'd3';
+import { line, scaleBand } from 'd3';
 import { Context } from '../App';
+import Data from './chart_data_1_line.txt'
 
 const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, redPeriods }) => {
     const {isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick } = useContext(Context)
 
     const canvas = useRef(null)
+
+    let lineDataArr = []
+    let periodsDataArr = []
+
+    useEffect(() => {
+        d3.text(Data).then(function(text) {
+            const enteredData = text.split('Arrows Data:')
+            lineDataArr = enteredData[0].slice(13, -3).replace(/(,[^,]*),/g,"$1;").split(';').map(item => JSON.parse(item))
+            console.log(lineDataArr)
+
+            const calculatingPeriodsDataArr = enteredData[1].slice(3, -1).split('},').map(item => item + "}")
+            periodsDataArr = calculatingPeriodsDataArr.slice(0, -1).map(item => JSON.parse(item))
+            console.log(periodsDataArr)
+        })
+    }, [])
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
