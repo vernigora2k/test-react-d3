@@ -13,18 +13,20 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
 
     let lineDataArr = []
     let periodsDataArr = []
+    const [lineData, setLineData] = useState()
 
-    useEffect(() => {
-        d3.text(Data).then(function(text) {
-            const enteredData = text.split('Arrows Data:')
-            lineDataArr = enteredData[0].slice(13, -3).replace(/(,[^,]*),/g,"$1;").split(';').map(item => JSON.parse(item))
-            console.log(lineDataArr)
+    // useEffect(() => {
+    //     d3.text(Data).then(function(text) {
+    //         const enteredData = text.split('Arrows Data:')
+    //         lineDataArr = enteredData[0].slice(13, -3).replace(/(,[^,]*),/g,"$1;").split(';').map(item => JSON.parse(item))
+    //         console.log(lineDataArr)
+    //         setLineData(lineDataArr)
 
-            const calculatingPeriodsDataArr = enteredData[1].slice(3, -1).split('},').map(item => item + "}")
-            periodsDataArr = calculatingPeriodsDataArr.slice(0, -1).map(item => JSON.parse(item))
-            console.log(periodsDataArr)
-        })
-    }, [])
+    //         const calculatingPeriodsDataArr = enteredData[1].slice(3, -1).split('},').map(item => item + "}")
+    //         periodsDataArr = calculatingPeriodsDataArr.slice(0, -1).map(item => JSON.parse(item))
+    //         console.log(periodsDataArr)
+    //     })
+    // }, [])
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
@@ -68,19 +70,22 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
     }
 
     const addLineChartBlue = (svg) => {
-        d3.csv(csvData).then(function(data) {
-            data.forEach(function(d, i) {
-                if (i > xdim - 961) return 
-                d.date = i
-                d.close = +d.close * 20 - 3900
+        d3.text(Data).then(function(data) {
+            const enteredData = data.split('Arrows Data:')
+            lineDataArr = enteredData[0].slice(13, -3).replace(/(,[^,]*),/g,"$1;").split(';').map(item => JSON.parse(item))
+            const lineDataFiltred = lineDataArr.filter(item => item.value)
+            
+            lineDataFiltred.forEach(function(d, i) { 
+                d.date = i/5
+                d.close = +d.value * 20 - 3900
             })
 
             const chartLine = d3.line()
             .x(value => {return (value.date) * 3 + margin.left})
-            .y(value => {return (value.close - 100) /6})
+            .y(value => {return (value.value - 100) * 5})
             
             svg.select('path')
-            .data([data])
+            .data([lineDataFiltred])
             .join('path')
             .attr('id', 'lineBlue')
             .attr('d', value => chartLine(value))
