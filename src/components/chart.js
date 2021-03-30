@@ -1,36 +1,20 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import * as d3 from 'd3';
 import './styles/chart.css';
-import csvData from './aapl.csv';
-import { line, scaleBand } from 'd3';
 import { Context } from '../App';
 import Data from './chart_data_1_line.txt'
 
-const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, redPeriods }) => {
-    const {isEquitiesChecked, handleEquitiesClick, isSynapticsChecked, handleSynapticsClick } = useContext(Context)
+const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale }) => {
+    const {isEquitiesChecked, isSynapticsChecked } = useContext(Context)
 
     const canvas = useRef(null)
 
     let lineDataArr = []
     let periodsDataArr = []
-    const [lineData, setLineData] = useState()
-
-    // useEffect(() => {
-    //     d3.text(Data).then(function(text) {
-    //         const enteredData = text.split('Arrows Data:')
-    //         lineDataArr = enteredData[0].slice(13, -3).replace(/(,[^,]*),/g,"$1;").split(';').map(item => JSON.parse(item))
-    //         console.log(lineDataArr)
-    //         setLineData(lineDataArr)
-
-    //         const calculatingPeriodsDataArr = enteredData[1].slice(3, -1).split('},').map(item => item + "}")
-    //         periodsDataArr = calculatingPeriodsDataArr.slice(0, -1).map(item => JSON.parse(item))
-    //         console.log(periodsDataArr)
-    //     })
-    // }, [])
 
     useEffect(() => {
         const svg = d3.select(canvas.current)
-        .attr("class", "axis")
+            .attr("class", "axis")
 
         addPeriodBlocksRed(svg)
         addPeriodBlocksGreen(svg)
@@ -74,15 +58,15 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
             const enteredData = data.split('Arrows Data:')
             lineDataArr = enteredData[0].slice(13, -3).replace(/(,[^,]*),/g,"$1;").split(';').map(item => JSON.parse(item))
             const lineDataFiltred = lineDataArr.filter(item => item.value)
-            
+
             lineDataFiltred.forEach(function(d, i) { 
                 d.date = i/5
-                d.close = +d.value * 20 - 3900
+                d.close = +d.value 
             })
 
             const chartLine = d3.line()
-            .x(value => {return (value.date) * 3 + margin.left})
-            .y(value => {return (value.value - 100) * 5})
+            .x(value => {return (value.date) * 3.2 + margin.left})
+            .y(value => {return (50 - value.value) * 7})
             
             svg.select('path')
             .data([lineDataFiltred])
@@ -133,19 +117,31 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
             d3.selectAll('#periodsRed').remove()
             return
         }
-       
-        redPeriods.forEach(d => {
-            svg.append('rect')
-            .attr('x', d.x)
-            .attr('y', 20)   
-            .attr('width', d.w)
-            .attr('height', ydim - 20)
-            .attr('id', 'periodsRed')
-            .attr('fill', 'lightcoral')
-            .attr('opacity', 0.3)
-            .style("stroke", 'black') 
-            .style("stroke-dasharray", "4,4")
+
+        d3.text(Data).then(function(text) {
+            const enteredData = text.split('Arrows Data:')
+            const calculatingPeriodsDataArr = enteredData[1].slice(3, -1).split('},').map(item => item + "}")
+            periodsDataArr = calculatingPeriodsDataArr.slice(0, -1).map(item => JSON.parse(item))
+            const redPeriod = periodsDataArr.filter(item => { return item.type_of_rho === 'reverse'})
+            redPeriod.forEach(function(d, i) {
+                d.min_period_id = d.min_period_id.replace(/-|\s/g,"") / 1850 - 10000;
+                d.max_period_id = d.max_period_id.replace(/-|\s/g,"") / 1720 - 10000;
+            })
+
+            redPeriod.forEach(d => {
+                svg.append('rect')
+                .attr('x', d.min_period_id)
+                .attr('y', 20)   
+                .attr('width', d.max_period_id)
+                .attr('height', ydim - 20)
+                .attr('id', 'periodsRed')
+                .attr('fill', 'lightcoral')
+                .attr('opacity', 0.03)
+                .style("stroke", 'black') 
+                .style("stroke-dasharray", "4,4")
+            })
         })
+       
     }
 
     const addPeriodBlocksGreen = (svg) => {
@@ -154,18 +150,30 @@ const Chart = ({ xdim, ydim, margin, xdata, ydata, ydatascale, greenPeriods, red
             return
         }
 
-        greenPeriods.forEach(d => {
-            svg.append('rect')
-              .attr('x', d.x)
-              .attr('y', 20)   
-              .attr('width', d.w)
-              .attr('height', ydim - 20)
-              .attr('id', 'periodsGreen')
-              .attr('fill', 'lightgreen')
-              .attr('opacity', 0.3)
-              .style("stroke", 'black') 
-              .style("stroke-dasharray", "4,4")
-        })
+        d3.text(Data).then(function(text) {
+                    const enteredData = text.split('Arrows Data:')
+                    const calculatingPeriodsDataArr = enteredData[1].slice(3, -1).split('},').map(item => item + "}")
+                    periodsDataArr = calculatingPeriodsDataArr.slice(0, -1).map(item => JSON.parse(item))
+                    const greenPeriod = periodsDataArr.filter(item => { return item.type_of_rho === 'direct'})
+                    greenPeriod.forEach(function(d, i) {
+                        d.min_period_id = d.min_period_id.replace(/-|\s/g,"") / 1960 - 10000;
+                        d.max_period_id = d.max_period_id.replace(/-|\s/g,"") / 1820 - 10000;
+                    })
+
+                    greenPeriod.forEach(d => {
+                        svg.append('rect')
+                          .attr('x', d.min_period_id)
+                          .attr('y', 20)   
+                          .attr('width', d.max_period_id)
+                          .attr('height', ydim - 20)
+                          .attr('id', 'periodsGreen')
+                          .attr('fill', 'lightgreen')
+                          .attr('opacity', 0.03)
+                          .style("stroke", 'black') 
+                          .style("stroke-dasharray", "4,4")
+                    })
+            })
+
     }
 
     var xscale = d3.scaleBand()
